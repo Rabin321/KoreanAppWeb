@@ -29,7 +29,6 @@ class _AddQuizState extends State<AddQuiz> {
   String questionImageUrl = "";
 
   List<String> options = ["", "", "", ""];
-  List<String> optionImages = ["", "", "", ""];
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +93,10 @@ class _AddQuizState extends State<AddQuiz> {
                     labelText: "Option ${i + 1}",
                     controller: TextEditingController(text: options[i]),
                     hintText: "Enter option...",
+                    onChanged: (value) {
+                      options[i] =
+                          value; // Update the options list when the text changes
+                    },
                     validate: (v) {
                       if (v!.isEmpty) {
                         return "Should not be empty";
@@ -105,9 +108,21 @@ class _AddQuizState extends State<AddQuiz> {
                   labelText: "Correct Image Position",
                   controller: correctAnswer,
                   hintText: "Enter correct image position (1-4)",
+                  onChanged: (value) {
+                    // Ensure that the input is an integer between 1 and 4
+                    if (value.isNotEmpty) {
+                      int parsedValue = int.tryParse(value) ?? 0;
+                      if (parsedValue < 1 || parsedValue > 4) {
+                        correctAnswer.text =
+                            ""; // Clear the input if it doesn't meet the criteria
+                      }
+                    }
+                  },
                   validate: (v) {
-                    if (v!.isEmpty ||
-                        int.tryParse(v) == null ||
+                    if (v!.isEmpty) {
+                      return "Should not be empty";
+                    }
+                    if (int.tryParse(v) == null ||
                         int.parse(v) < 1 ||
                         int.parse(v) > 4) {
                       return "Enter a valid position (1-4)";
@@ -131,7 +146,7 @@ class _AddQuizState extends State<AddQuiz> {
     );
   }
 
-  save() async {
+  void save() async {
     setState(() {
       isSaving = true;
     });
@@ -161,24 +176,39 @@ class _AddQuizState extends State<AddQuiz> {
         ));
       });
     } else {
-      await uploadQuestionImage();
-      await PracticeListeningModel.addPracticeListening(
-        PracticeListeningModel(
-          id: uuid.v4(),
-          questionimage: questionImageUrl,
-          options: options,
-          correctAnswer: correctAnswer.text,
-        ),
-      ).whenComplete(() {
+      int parsedValue = int.tryParse(correctAnswer.text) ?? 0;
+      if (parsedValue < 1 || parsedValue > 4) {
         setState(() {
           isSaving = false;
-          clearFields();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("ADDED SUCCESSFULLY"),
-            backgroundColor: Colors.green[800],
+            content: Text("Please enter a valid position (1-4)"),
+            backgroundColor: Colors.red[600],
           ));
         });
-      });
+      } else {
+        for (int i = 0; i < 4; i++) {
+          options[i] = TextEditingController(text: options[i]).text;
+        }
+
+        await uploadQuestionImage();
+        await PracticeListeningModel.addPracticeListening(
+          PracticeListeningModel(
+            id: uuid.v4(),
+            questionimage: questionImageUrl,
+            options: options,
+            correctAnswer: correctAnswer.text,
+          ),
+        ).whenComplete(() {
+          setState(() {
+            isSaving = false;
+            clearFields();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("ADDED SUCCESSFULLY"),
+              backgroundColor: Colors.green[800],
+            ));
+          });
+        });
+      }
     }
   }
 
@@ -188,7 +218,6 @@ class _AddQuizState extends State<AddQuiz> {
       questionImageUrl = "";
       for (int i = 0; i < 4; i++) {
         options[i] = "";
-        optionImages[i] = "";
       }
       correctAnswer.clear();
     });
