@@ -5,6 +5,8 @@ import 'package:korean_app_web/presentation/dashboard/grammar/add_grammar_page.d
 import 'package:korean_app_web/presentation/dashboard/grammar/update_grammar.dart';
 import 'package:korean_app_web/presentation/practice/listening/add_listening.dart';
 import 'package:korean_app_web/presentation/practice/listening/update_listening.dart';
+import 'package:korean_app_web/presentation/practice/reading/add_reading.dart';
+import 'package:korean_app_web/presentation/practice/reading/update_reading.dart';
 import 'package:korean_app_web/utils/app_colors.dart';
 
 // import 'deleteProducts_screen.dart';
@@ -40,6 +42,18 @@ class _WebMainScreenState extends State<WebMainScreen> {
       case UpdateListening.id:
         setState(() {
           selectedSCreen = const UpdateListening();
+        });
+        break;
+
+      case AddReading.id:
+        setState(() {
+          selectedSCreen = const AddReading();
+        });
+        break;
+
+      case UpdateReading.id:
+        setState(() {
+          selectedSCreen = const UpdateReading();
         });
         break;
       case AddGrammar.id:
@@ -90,9 +104,21 @@ class _WebMainScreenState extends State<WebMainScreen> {
                 route: AddListening.id,
               ),
               AdminMenuItem(
-                title: "EDIT LISTENING",
+                title: "UPDATE LISTENING",
                 icon: Icons.dashboard,
                 route: UpdateListening.id,
+              ),
+            ]),
+            AdminMenuItem(title: "READING", icon: Icons.dashboard, children: [
+              AdminMenuItem(
+                title: "ADD READING",
+                icon: Icons.dashboard,
+                route: AddReading.id,
+              ),
+              AdminMenuItem(
+                title: "UPDATE READING",
+                icon: Icons.dashboard,
+                route: UpdateReading.id,
               ),
             ]),
           ]),

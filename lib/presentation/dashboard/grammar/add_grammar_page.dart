@@ -32,122 +32,185 @@ class _AddGrammarState extends State<AddGrammar> {
   var uuid = const Uuid();
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            child: Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Column(
-                  children: [
-                    const Text(
-                      "ADD GRAMMAR",
-                      // style: EcoStyle.boldStyle,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(8.h),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "ADD GRAMMAR",
+                          // style: EcoStyle.boldStyle,
+                        ),
+                        // Container(
+                        //   margin: const EdgeInsets.symmetric(
+                        //       horizontal: 17, vertical: 7),
+                        //   decoration: BoxDecoration(
+                        //       color: Colors.grey.withOpacity(0.5),
+                        //       borderRadius: BorderRadius.circular(10)),
+                        // ),
+                        EcoTextField(
+                          labelText: "Word",
+                          maxLines: 1,
+                          controller: word,
+                          hintText: "enter word",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoTextField(
+                          labelText: "Korean Detail",
+                          maxLines: 2,
+                          controller: kDetail,
+                          hintText: "enter detail in korean",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoTextField(
+                          labelText: "Korean Example",
+                          maxLines: 2,
+                          controller: kExample,
+                          hintText: "enter example in korean",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoTextField(
+                          labelText: "Nepali Detail",
+                          maxLines: 2,
+                          controller: nDetail,
+                          hintText: "enter detail in nepali",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoTextField(
+                          labelText: "Nepali Example",
+                          maxLines: 2,
+                          controller: nExample,
+                          hintText: "enter example in nepali",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoTextField(
+                          labelText: "English Detail",
+                          maxLines: 2,
+                          controller: eDetail,
+                          hintText: "enter detail in english",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoTextField(
+                          labelText: "English Example",
+                          maxLines: 2,
+                          controller: eExample,
+                          hintText: "enter example in english",
+                          validate: (v) {
+                            if (v!.isEmpty) {
+                              return "should not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        EcoButton(
+                          title: "SAVE",
+                          isLoginButton: true,
+                          onPress: () {
+                            save();
+                          },
+                          isLoading: isSaving,
+                        ),
+                      ],
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 17, vertical: 7),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    EcoTextField(
-                      labelText: "Word",
-                      maxLines: 1,
-                      controller: word,
-                      hintText: "enter word",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoTextField(
-                      labelText: "Korean Detail",
-                      maxLines: 2,
-                      controller: kDetail,
-                      hintText: "enter detail in korean",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoTextField(
-                      labelText: "Korean Example",
-                      maxLines: 2,
-                      controller: kExample,
-                      hintText: "enter example in korean",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoTextField(
-                      labelText: "Nepali Detail",
-                      maxLines: 2,
-                      controller: nDetail,
-                      hintText: "enter detail in nepali",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoTextField(
-                      labelText: "Nepali Example",
-                      maxLines: 2,
-                      controller: nExample,
-                      hintText: "enter example in nepali",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoTextField(
-                      labelText: "English Detail",
-                      maxLines: 2,
-                      controller: eDetail,
-                      hintText: "enter detail in english",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoTextField(
-                      labelText: "English Example",
-                      maxLines: 2,
-                      controller: eExample,
-                      hintText: "enter example in english",
-                      validate: (v) {
-                        if (v!.isEmpty) {
-                          return "should not be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    EcoButton(
-                      title: "SAVE",
-                      isLoginButton: true,
-                      onPress: () {
-                        save();
-                      },
-                      isLoading: isSaving,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+
+                //save click garni bitikai clear() call hunxa so clear huni bitikai texteditingcontroller ma value hudaina ani preview ma dekhaudaina.
+                // save huna lai lagni 1 2 second , tyo time ma chai preview ma dekhauxa.
+
+                // Expanded(
+                //     child: Padding(
+                //   padding: EdgeInsets.all(8.h),
+                //   child: Column(
+                //     // crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: [
+                //       const Text(
+                //         "PREVIEW",
+                //       ),
+                //       Container(
+                //         color: Colors.grey.withOpacity(0.5),
+                //         child: Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Text(
+                //               "Word:${word.text}",
+                //             ),
+                //             Text(
+                //               "Korean Detail: \t ${kDetail.text}",
+                //               style: TextStyle(
+                //                   fontSize: 4.sp, fontWeight: FontWeight.bold),
+                //             ),
+                //             Text(
+                //               "Korean Example: \t ${kExample.text}",
+                //               style: TextStyle(
+                //                   fontSize: 4.sp, fontWeight: FontWeight.bold),
+                //             ),
+                //             Text(
+                //               "Nepali Detail: \t ${nDetail.text}",
+                //               style: TextStyle(
+                //                   fontSize: 4.sp, fontWeight: FontWeight.bold),
+                //             ),
+                //             Text(
+                //               "Nepali Example: \t ${nExample.text}",
+                //               style: TextStyle(
+                //                   fontSize: 4.sp, fontWeight: FontWeight.bold),
+                //             ),
+                //             Text(
+                //               "English Detail: \t ${eDetail.text}",
+                //               style: TextStyle(
+                //                   fontSize: 4.sp, fontWeight: FontWeight.bold),
+                //             ),
+                //             Text(
+                //               "English Example: \t ${eExample.text}",
+                //               style: TextStyle(
+                //                   fontSize: 4.sp, fontWeight: FontWeight.bold),
+                //             ),
+                //           ],
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ))
+              ],
             ),
           ),
         ),
@@ -229,8 +292,11 @@ class _AddGrammarState extends State<AddGrammar> {
       // selectedValue = "";
       word.clear();
       kDetail.clear();
+      kExample.clear();
       nDetail.clear();
+      nExample.clear();
       eDetail.clear();
+      eExample.clear();
     });
   }
 }

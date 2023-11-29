@@ -6,29 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:korean_app_web/presentation/practice/listening/listening_model.dart';
+import 'package:korean_app_web/presentation/practice/reading/reading_model.dart';
 import 'package:korean_app_web/utils/app_colors.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../customs/widgets/ecobutton.dart';
 import '../../../customs/widgets/ecotextfield.dart';
 
-class AddListening extends StatefulWidget {
-  static const String id = "addlistening";
+class AddReading extends StatefulWidget {
+  static const String id = "addreading";
 
-  const AddListening({super.key});
+  const AddReading({super.key});
 
   @override
-  State<AddListening> createState() => _AddListeningState();
+  State<AddReading> createState() => _AddReadingState();
 }
 
-class _AddListeningState extends State<AddListening> {
+class _AddReadingState extends State<AddReading> {
   TextEditingController correctAnswer = TextEditingController();
   TextEditingController title = TextEditingController();
   bool isSaving = false;
   var uuid = const Uuid();
   bool isUploading = false;
-  XFile? pickedAudio;
-  String AudioUrls = "";
+  final imagePicker = ImagePicker();
+  XFile? pickedImage;
+  String imageUrls = "";
 
   List<String> options = ["", "", "", ""];
 
@@ -41,7 +43,7 @@ class _AddListeningState extends State<AddListening> {
           child: Column(
             children: [
               const Text(
-                "ADD LISTINING AUDIO",
+                "ADD READING IMAGE",
               ),
               Padding(
                 padding:
@@ -54,48 +56,42 @@ class _AddListeningState extends State<AddListening> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
-                              child: Text("Pick Audio"),
-                              onPressed: () => pickAudio(),
+                              child: Text("Pick Image"),
+                              onPressed: () => pickImage(),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                               )),
                           Container(
-                              height: 30.h,
-                              width: 60.w,
+                              height: 100.h,
+                              width: 40.w,
                               decoration: BoxDecoration(
                                 color: Colors.grey.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: pickedAudio != null
+                              child: pickedImage != null
                                   ? Stack(
                                       children: [
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 35),
-                                          // alignment: Alignment.center,
-                                          height: 10.h,
-                                          // width: 10.h,
-                                          child: const Icon(Icons.music_note),
-                                        ),
-                                        const Center(
-                                            child: Text(
-                                          "Audio added",
-                                          style: TextStyle(fontSize: 18),
-                                        )),
+                                        SizedBox(
+                                            height: 100.h,
+                                            width: 40.w,
+                                            child: Image.network(
+                                              File(pickedImage!.path).path,
+                                              fit: BoxFit.fill,
+                                            )),
                                         IconButton(
                                             onPressed: () {
                                               setState(() {
-                                                if (pickedAudio != null) {
+                                                if (pickedImage != null) {
                                                   // pickedImage.removeAt(index);
-                                                  pickedAudio = null;
+                                                  pickedImage = null;
                                                 }
                                               });
                                             },
                                             icon: const Icon(
-                                                Icons.cancel_outlined)),
+                                                Icons.cancel_outlined))
                                       ],
                                     )
-                                  : const SizedBox()),
+                                  : SizedBox()),
                         ],
                       ),
                     ]),
@@ -185,7 +181,7 @@ class _AddListeningState extends State<AddListening> {
       isSaving = true;
     });
 
-    if (pickedAudio == null) {
+    if (pickedImage == null) {
       setState(() {
         isSaving = false;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -224,19 +220,19 @@ class _AddListeningState extends State<AddListening> {
           options[i] = TextEditingController(text: options[i]).text;
         }
 
-        await uploadAudios();
-        await PracticeListeningModel.addPracticeListening(
-          PracticeListeningModel(
+        await uploadImages();
+        await PracticeReadingModel.addPracticeReading(
+          PracticeReadingModel(
             id: uuid.v4(),
             title: title.text,
-            audioUrl: AudioUrls,
+            imageUrl: imageUrls,
             options: options,
             correctAnswer: correctAnswer.text,
           ),
         ).whenComplete(() {
           setState(() {
             isSaving = false;
-            pickedAudio;
+            pickedImage;
             clearFields();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("ADDED SUCCESSFULLY"),
@@ -250,7 +246,7 @@ class _AddListeningState extends State<AddListening> {
 
   clearFields() {
     setState(() {
-      pickedAudio = null;
+      pickedImage = null;
       title.clear();
 
       for (int i = 0; i < 4; i++) {
@@ -260,60 +256,50 @@ class _AddListeningState extends State<AddListening> {
     });
   }
 
-  pickAudio() async {
-    FilePickerResult? pickAudio =
-        await FilePicker.platform.pickFiles(type: FileType.audio);
-    if (pickAudio != null) {
+  pickImage() async {
+    final XFile? pickImage =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickImage != null) {
       setState(() {
-        print("Audio picked");
-        // pickedAudio = XFile(pickAudio.files.single.path!);
-        // Uint8List? pickedAudio = pickAudio.files.single.bytes;
-        // pickedAudio = XFile.fromData(, name: pickAudio.files.single.name);
-        pickedAudio = XFile.fromData(
-          pickAudio.files.single.bytes!,
-          name: pickAudio.files.single.name,
-        );
-
-        print("Audio picked2");
+        // pickedImage.addAll(pickImage);
+        pickedImage = pickImage;
       });
     } else {
-      print("No audio selected");
+      print("no images selected");
     }
   }
 
-  Future<String?> postAudios(XFile? audioFile) async {
+  Future postImages(XFile? imageFile) async {
     setState(() {
       isUploading = true;
     });
     String? urls;
     Reference ref = FirebaseStorage.instance
         .ref()
-        .child("practice_listening")
-        .child(audioFile!.name);
+        .child("practice_reading_Images")
+        .child(imageFile!.name);
     if (kIsWeb) {
       await ref.putData(
-        await audioFile.readAsBytes(),
-        SettableMetadata(contentType: "audio/mp3"),
+        await imageFile.readAsBytes(),
+        SettableMetadata(contentType: "image/jpeg"),
       );
       urls = await ref.getDownloadURL();
       setState(() {
         isUploading = false;
-        AudioUrls = urls!;
+        imageUrls = urls!;
       });
       return urls;
     }
-    return null;
   }
 
-  Future<void> uploadAudios() async {
-    if (pickedAudio != null) {
+  Future<void> uploadImages() async {
+    if (pickedImage != null) {
       try {
-        await postAudios(pickedAudio).then((downloadUrl) => AudioUrls);
+        await postImages(pickedImage).then((downloadUrl) => imageUrls);
+        // pickedImage.add(downloadUrl);
       } catch (e) {
-        print('Error uploading audio: $e');
+        print('Error uploading image: $e');
       }
-
-      // }
     }
   }
 }
