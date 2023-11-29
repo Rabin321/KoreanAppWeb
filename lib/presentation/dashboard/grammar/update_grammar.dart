@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:korean_app_web/presentation/dashboard/grammar/grammar_model.dart';
+import 'package:korean_app_web/presentation/dashboard/grammar/update_complete_grammar.dart';
 import 'package:korean_app_web/presentation/practice/listening/update_complete_listening.dart';
 
 import '../../../utils/app_colors.dart';
-import 'listening_model.dart';
 
-class UpdateListening extends StatelessWidget {
-  static const String id = "updatelistening";
+class UpdateGrammar extends StatelessWidget {
+  static const String id = "updategrammar";
 
-  const UpdateListening({super.key});
+  const UpdateGrammar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class UpdateListening extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              "UPDATE LISTENING",
+              "UPDATE GRAMMAR",
               //style: EcoStyle.boldStyle,
             ),
             Expanded(
@@ -28,7 +29,7 @@ class UpdateListening extends StatelessWidget {
                 width: double.infinity, // Set width to maximum available width
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('practice_listening')
+                      .collection('GrammarWord')
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -44,7 +45,7 @@ class UpdateListening extends StatelessWidget {
                       // dataRowHeight: 90,
                       columnSpacing: 200.w,
                       columns: const [
-                        DataColumn(label: Text('Audio Title')),
+                        DataColumn(label: Text('Word')),
                         DataColumn(label: Text('Actions')),
                       ],
                       rows: List<DataRow>.generate(
@@ -52,7 +53,7 @@ class UpdateListening extends StatelessWidget {
                         (index) => DataRow(
                           cells: [
                             DataCell(
-                              Text(data[index]['title']),
+                              Text(data[index]['word']),
                             ),
                             DataCell(
                               Row(
@@ -63,9 +64,8 @@ class UpdateListening extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.red),
                                       onPressed: () {
-                                        PracticeListeningModel
-                                            .deletePracticeListening(
-                                                data[index].id);
+                                        GrammarWordModel.deleteGrammarWord(
+                                            data[index].id);
                                       },
                                       child: Text("Delete")),
                                   // IconButton(
@@ -85,16 +85,17 @@ class UpdateListening extends StatelessWidget {
                                         showDialog(
                                           context: context,
                                           builder: (context) =>
-                                              UpdateCompleteListening(
+                                              UpdateCompleteGrammar(
                                             id: data[index].id,
-                                            practiceListeningModel:
-                                                PracticeListeningModel(
+                                            grammarWordModel: GrammarWordModel(
                                               id: id,
-                                              title: data[index]['title'],
-                                              audioUrl: data[index]['audioUrl'],
-                                              correctAnswer: data[index]
-                                                  ['correctAnswer'],
-                                              options: data[index]['options'],
+                                              word: data[index]['word'],
+                                              kDetail: data[index]['kDetail'],
+                                              kExample: data[index]['kExample'],
+                                              nDetail: data[index]['nDetail'],
+                                              nExample: data[index]['nExample'],
+                                              eDetail: data[index]['eDetail'],
+                                              eExample: data[index]['eExample'],
                                             ),
                                           ),
                                         );

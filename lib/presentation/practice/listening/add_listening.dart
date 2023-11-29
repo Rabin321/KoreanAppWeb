@@ -1,32 +1,34 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:korean_app_web/presentation/practice/listening/listening_model.dart';
+import 'package:korean_app_web/utils/app_colors.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../customs/widgets/ecobutton.dart';
 import '../../../customs/widgets/ecotextfield.dart';
 
-class AddQuiz extends StatefulWidget {
-  static const String id = "addquiz";
+class AddListening extends StatefulWidget {
+  static const String id = "addistening";
 
-  const AddQuiz({super.key});
+  const AddListening({super.key});
 
   @override
-  State<AddQuiz> createState() => _AddQuizState();
+  State<AddListening> createState() => _AddListeningState();
 }
 
-class _AddQuizState extends State<AddQuiz> {
+class _AddListeningState extends State<AddListening> {
   TextEditingController correctAnswer = TextEditingController();
+  TextEditingController title = TextEditingController();
   bool isSaving = false;
   var uuid = const Uuid();
   bool isUploading = false;
-  final imagePicker = ImagePicker();
-  XFile? pickedQuestionImage;
-  String questionImageUrl = "";
+  XFile? pickedAudio;
+  String AudioUrls = "";
 
   List<String> options = ["", "", "", ""];
 
@@ -34,112 +36,144 @@ class _AddQuizState extends State<AddQuiz> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Column(
-              children: [
-                const Text(
-                  "ADD QUIZ",
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    pickQuestionImage();
-                  },
-                  child: Text("Pick Question Image"),
-                ),
-                Container(
-                  height: 0.18 * MediaQuery.of(context).size.height,
-                  width: 0.18 * MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: pickedQuestionImage != null
-                      ? Stack(
-                          children: [
-                            SizedBox(
-                                // height: 20.h,
-                                // width: 20.h,
-                                child: Image.network(
-                              File(pickedQuestionImage!.path).path,
-                              fit: BoxFit.fill,
-                            )),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (pickedQuestionImage != null) {
-                                      // pickedImage.removeAt(index);
-                                      pickedQuestionImage = null;
-                                    }
-                                  });
-                                },
-                                icon: const Icon(Icons.cancel_outlined)),
-                          ],
-                        )
-                      : const SizedBox(),
-                ),
-                Text("Enter Options:"),
-                for (int i = 0; i < 4; i++)
-                  EcoTextField(
-                    labelText: "Option ${i + 1}",
-                    controller: TextEditingController(text: options[i]),
-                    hintText: "Enter option...",
-                    onChanged: (value) {
-                      options[i] =
-                          value; // Update the options list when the text changes
-                    },
-                    validate: (v) {
-                      if (v!.isEmpty) {
-                        return "Should not be empty";
-                      }
-                      return null;
-                    },
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            children: [
+              const Text(
+                "ADD LISTINING AUDIO",
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Column(
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                              child: Text("Pick Audio"),
+                              onPressed: () => pickAudio(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                              )),
+                          Container(
+                              height: 30.h,
+                              width: 60.w,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: pickedAudio != null
+                                  ? Stack(
+                                      children: [
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 35),
+                                          // alignment: Alignment.center,
+                                          height: 10.h,
+                                          // width: 10.h,
+                                          child: const Icon(Icons.music_note),
+                                        ),
+                                        const Center(
+                                            child: Text(
+                                          "Audio added",
+                                          style: TextStyle(fontSize: 18),
+                                        )),
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (pickedAudio != null) {
+                                                  // pickedImage.removeAt(index);
+                                                  pickedAudio = null;
+                                                }
+                                              });
+                                            },
+                                            icon: const Icon(
+                                                Icons.cancel_outlined)),
+                                      ],
+                                    )
+                                  : const SizedBox()),
+                        ],
+                      ),
+                    ]),
+              ),
+              EcoTextField(
+                labelText: "Title",
+                controller: title,
+                hintText: "enter audio title...",
+                validate: (v) {
+                  if (v!.isEmpty) {
+                    return "should not be empty";
+                  }
+                  return null;
+                },
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Enter Options:",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600),
+                    )),
+              ),
+              for (int i = 0; i < 4; i++)
                 EcoTextField(
-                  labelText: "Correct Image Position",
-                  controller: correctAnswer,
-                  hintText: "Enter correct image position (1-4)",
+                  labelText: "Option ${i + 1}",
+                  controller: TextEditingController(text: options[i]),
+                  hintText: "Enter option...",
                   onChanged: (value) {
-                    // Ensure that the input is an integer between 1 and 4
-                    if (value.isNotEmpty) {
-                      int parsedValue = int.tryParse(value) ?? 0;
-                      if (parsedValue < 1 || parsedValue > 4) {
-                        correctAnswer.text =
-                            ""; // Clear the input if it doesn't meet the criteria
-                      }
-                    }
+                    options[i] =
+                        value; // Update the options list when the text changes
                   },
                   validate: (v) {
                     if (v!.isEmpty) {
                       return "Should not be empty";
                     }
-                    if (int.tryParse(v) == null ||
-                        int.parse(v) < 1 ||
-                        int.parse(v) > 4) {
-                      return "Enter a valid position (1-4)";
-                    }
                     return null;
                   },
                 ),
-                EcoButton(
-                  title: "SAVE",
-                  isLoginButton: true,
-                  onPress: () {
-                    save();
-                  },
-                  isLoading: isSaving,
-                ),
-              ],
-            ),
+              EcoTextField(
+                labelText: "Correct Position",
+                controller: correctAnswer,
+                hintText: "Enter correct position (1-4)",
+                onChanged: (value) {
+                  // Ensure that the input is an integer between 1 and 4
+                  if (value.isNotEmpty) {
+                    int parsedValue = int.tryParse(value) ?? 0;
+                    if (parsedValue < 1 || parsedValue > 4) {
+                      correctAnswer.text =
+                          ""; // Clear the input if it doesn't meet the criteria
+                    }
+                  }
+                },
+                validate: (v) {
+                  if (v!.isEmpty) {
+                    return "Should not be empty";
+                  }
+                  if (int.tryParse(v) == null ||
+                      int.parse(v) < 1 ||
+                      int.parse(v) > 4) {
+                    return "Enter a valid position (1-4)";
+                  }
+                  return null;
+                },
+              ),
+              EcoButton(
+                title: "SAVE",
+                isLoginButton: true,
+                onPress: () {
+                  save();
+                },
+                isLoading: isSaving,
+              ),
+            ],
           ),
         ),
       ),
@@ -151,11 +185,11 @@ class _AddQuizState extends State<AddQuiz> {
       isSaving = true;
     });
 
-    if (pickedQuestionImage == null) {
+    if (pickedAudio == null) {
       setState(() {
         isSaving = false;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Please pick a question image"),
+          content: Text("Please pick a audio file"),
           backgroundColor: Colors.red[600],
         ));
       });
@@ -171,7 +205,7 @@ class _AddQuizState extends State<AddQuiz> {
       setState(() {
         isSaving = false;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Please enter the correct image position"),
+          content: Text("Please enter the correct position"),
           backgroundColor: Colors.red[600],
         ));
       });
@@ -190,17 +224,19 @@ class _AddQuizState extends State<AddQuiz> {
           options[i] = TextEditingController(text: options[i]).text;
         }
 
-        await uploadQuestionImage();
+        await uploadAudios();
         await PracticeListeningModel.addPracticeListening(
           PracticeListeningModel(
             id: uuid.v4(),
-            questionimage: questionImageUrl,
+            title: title.text,
+            audioUrl: AudioUrls,
             options: options,
             correctAnswer: correctAnswer.text,
           ),
         ).whenComplete(() {
           setState(() {
             isSaving = false;
+            pickedAudio;
             clearFields();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("ADDED SUCCESSFULLY"),
@@ -214,8 +250,9 @@ class _AddQuizState extends State<AddQuiz> {
 
   clearFields() {
     setState(() {
-      pickedQuestionImage = null;
-      questionImageUrl = "";
+      pickedAudio = null;
+      title.clear();
+
       for (int i = 0; i < 4; i++) {
         options[i] = "";
       }
@@ -223,51 +260,60 @@ class _AddQuizState extends State<AddQuiz> {
     });
   }
 
-  pickQuestionImage() async {
-    final XFile? pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
+  pickAudio() async {
+    FilePickerResult? pickAudio =
+        await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (pickAudio != null) {
       setState(() {
-        pickedQuestionImage = pickedImage;
+        print("Audio picked");
+        // pickedAudio = XFile(pickAudio.files.single.path!);
+        // Uint8List? pickedAudio = pickAudio.files.single.bytes;
+        // pickedAudio = XFile.fromData(, name: pickAudio.files.single.name);
+        pickedAudio = XFile.fromData(
+          pickAudio.files.single.bytes!,
+          name: pickAudio.files.single.name,
+        );
+
+        print("Audio picked2");
       });
     } else {
-      print("No image selected");
+      print("No audio selected");
     }
   }
 
-  Future postQuestionImage(XFile? imageFile) async {
+  Future<String?> postAudios(XFile? audioFile) async {
     setState(() {
       isUploading = true;
     });
-    String? url;
-
+    String? urls;
     Reference ref = FirebaseStorage.instance
         .ref()
-        .child("practiceListeningImages")
-        .child(imageFile!.name);
+        .child("practice_listening")
+        .child(audioFile!.name);
     if (kIsWeb) {
       await ref.putData(
-        await imageFile.readAsBytes(),
-        SettableMetadata(contentType: "image/jpeg"),
+        await audioFile.readAsBytes(),
+        SettableMetadata(contentType: "audio/mp3"),
       );
-      url = await ref.getDownloadURL();
-
+      urls = await ref.getDownloadURL();
       setState(() {
         isUploading = false;
-        questionImageUrl = url!;
+        AudioUrls = urls!;
       });
-      return url;
+      return urls;
     }
+    return null;
   }
 
-  Future<void> uploadQuestionImage() async {
-    if (pickedQuestionImage != null) {
+  Future<void> uploadAudios() async {
+    if (pickedAudio != null) {
       try {
-        await postQuestionImage(pickedQuestionImage)
-            .then((downloadUrl) => questionImageUrl);
+        await postAudios(pickedAudio).then((downloadUrl) => AudioUrls);
       } catch (e) {
-        print('Error uploading image: $e');
+        print('Error uploading audio: $e');
       }
+
+      // }
     }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
 import 'package:korean_app_web/presentation/dashboard/dashboard_screen.dart';
+import 'package:korean_app_web/presentation/dashboard/grammar/add_grammar_page.dart';
+import 'package:korean_app_web/presentation/dashboard/grammar/update_grammar.dart';
 import 'package:korean_app_web/presentation/practice/listening/add_listening.dart';
+import 'package:korean_app_web/presentation/practice/listening/update_listening.dart';
 import 'package:korean_app_web/utils/app_colors.dart';
 
 // import 'deleteProducts_screen.dart';
@@ -29,9 +32,25 @@ class _WebMainScreenState extends State<WebMainScreen> {
           selectedSCreen = const DashBoardScreen();
         });
         break;
-      case AddQuiz.id:
+      case AddListening.id:
         setState(() {
-          selectedSCreen = const AddQuiz();
+          selectedSCreen = const AddListening();
+        });
+        break;
+      case UpdateListening.id:
+        setState(() {
+          selectedSCreen = const UpdateListening();
+        });
+        break;
+      case AddGrammar.id:
+        setState(() {
+          selectedSCreen = const AddGrammar();
+        });
+        break;
+
+      case UpdateGrammar.id:
+        setState(() {
+          selectedSCreen = const UpdateGrammar();
         });
         break;
 
@@ -64,11 +83,26 @@ class _WebMainScreenState extends State<WebMainScreen> {
             route: DashBoardScreen.id,
           ),
           AdminMenuItem(title: "PRACTICE", icon: Icons.dashboard, children: [
+            AdminMenuItem(title: "LISTENING", icon: Icons.dashboard, children: [
+              AdminMenuItem(
+                title: "ADD LISTENING",
+                icon: Icons.dashboard,
+                route: AddListening.id,
+              ),
+              AdminMenuItem(
+                title: "EDIT LISTENING",
+                icon: Icons.dashboard,
+                route: UpdateListening.id,
+              ),
+            ]),
+          ]),
+          AdminMenuItem(title: "GRAMMAR", icon: Icons.book, children: [
             AdminMenuItem(
-              title: "LISTENING",
-              icon: Icons.dashboard,
-              route: AddQuiz.id,
-            ),
+                title: "ADD GRAMMAR", icon: Icons.book, route: AddGrammar.id),
+            AdminMenuItem(
+                title: "UPDATE GRAMMAR",
+                icon: Icons.book,
+                route: UpdateGrammar.id),
           ]),
         ],
         selectedRoute: WebMainScreen.id);
