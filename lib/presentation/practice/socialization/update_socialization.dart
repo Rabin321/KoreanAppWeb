@@ -3,16 +3,26 @@ import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:korean_app_web/presentation/practice/listening/update_complete_listening.dart';
 import 'package:korean_app_web/presentation/practice/reading/reading_model.dart';
 import 'package:korean_app_web/presentation/practice/reading/update_complete_reading.dart';
+import 'package:korean_app_web/presentation/practice/socialization/socialization_model.dart';
+import 'package:korean_app_web/presentation/practice/socialization/update_complete_socialization.dart';
 
 import '../../../utils/app_colors.dart';
 
-class UpdateReading extends StatelessWidget {
-  static const String id = "updatereading";
+class UpdateSocialization extends StatelessWidget {
+  static const String id = "updatesocialization";
 
-  const UpdateReading({super.key});
+  UpdateSocialization({super.key});
+
+  final FlutterTts flutterTts = FlutterTts();
+  speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1);
+    await flutterTts.speak(text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +33,7 @@ class UpdateReading extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              "UPDATE READING",
+              "UPDATE SOCIALIZATION",
               //style: EcoStyle.boldStyle,
             ),
             Expanded(
@@ -31,7 +41,7 @@ class UpdateReading extends StatelessWidget {
                 width: double.infinity, // Set width to maximum available width
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('practice_reading')
+                      .collection('practice_socialization')
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -61,13 +71,32 @@ class UpdateReading extends StatelessWidget {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(2.0),
-                                child: Container(
-                                  height: 60.h,
-                                  width: 60.h,
-                                  child: Image.network(
-                                    data[index]['imageUrl'],
-                                    fit: BoxFit.fill,
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 60.h,
+                                      width: 60.h,
+                                      child: Image.network(
+                                        data[index]['imageUrl'],
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        width:
+                                            10), // Adjust the spacing as needed
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons
+                                            .volume_up_sharp, // Replace 'your_icon' with the desired icon
+                                        size: 24, // Adjust the size as needed
+                                        color: Colors
+                                            .green, // Replace 'your_color' with the desired color
+                                      ),
+                                      onPressed: () {
+                                        speak(data[index]['title']);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             )),
@@ -80,8 +109,8 @@ class UpdateReading extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.red),
                                       onPressed: () {
-                                        PracticeReadingModel
-                                            .deletePracticeReading(
+                                        PracticeSocializationModel
+                                            .deletePracticeSocialization(
                                                 data[index].id);
                                       },
                                       child: Text("Delete")),
@@ -92,10 +121,10 @@ class UpdateReading extends StatelessWidget {
                                         showDialog(
                                           context: context,
                                           builder: (context) =>
-                                              UpdateCompleteReading(
+                                              UpdateCompleteSocialization(
                                             id: data[index].id,
-                                            practiceReadingModel:
-                                                PracticeReadingModel(
+                                            practiceSocializationModel:
+                                                PracticeSocializationModel(
                                               id: id,
                                               title: data[index]['title'],
                                               imageUrl: data[index]['imageUrl'],

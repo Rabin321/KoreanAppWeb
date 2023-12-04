@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:korean_app_web/presentation/dashboard/dashboard_screen.dart';
 import 'package:korean_app_web/presentation/dashboard/grammar/add_grammar_page.dart';
 import 'package:korean_app_web/presentation/dashboard/grammar/update_grammar.dart';
@@ -7,6 +8,8 @@ import 'package:korean_app_web/presentation/practice/listening/add_listening.dar
 import 'package:korean_app_web/presentation/practice/listening/update_listening.dart';
 import 'package:korean_app_web/presentation/practice/reading/add_reading.dart';
 import 'package:korean_app_web/presentation/practice/reading/update_reading.dart';
+import 'package:korean_app_web/presentation/practice/socialization/add_socialization.dart';
+import 'package:korean_app_web/presentation/practice/socialization/update_socialization.dart';
 import 'package:korean_app_web/utils/app_colors.dart';
 
 // import 'deleteProducts_screen.dart';
@@ -56,6 +59,24 @@ class _WebMainScreenState extends State<WebMainScreen> {
           selectedSCreen = const UpdateReading();
         });
         break;
+
+      case AddSocialization.id:
+        setState(() {
+          selectedSCreen = const AddSocialization();
+        });
+        break;
+
+      case UpdateSocialization.id:
+        setState(() {
+          selectedSCreen = UpdateSocialization();
+        });
+        break;
+
+      case UpdateReading.id:
+        setState(() {
+          selectedSCreen = const UpdateReading();
+        });
+        break;
       case AddGrammar.id:
         setState(() {
           selectedSCreen = const AddGrammar();
@@ -85,8 +106,9 @@ class _WebMainScreenState extends State<WebMainScreen> {
 
   SideBar customSideBar() {
     return SideBar(
-        backgroundColor: AppColors.primary,
-        textStyle: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
+        backgroundColor: AppColors.white,
+        textStyle: TextStyle(
+            color: Color.fromARGB(255, 131, 131, 131), fontSize: 4.sp),
         onSelected: (item) {
           chooseScreens(item);
         },
@@ -121,6 +143,21 @@ class _WebMainScreenState extends State<WebMainScreen> {
                 route: UpdateReading.id,
               ),
             ]),
+            AdminMenuItem(
+                title: "SOCIALIZATION",
+                icon: Icons.dashboard,
+                children: [
+                  AdminMenuItem(
+                    title: "ADD SOCIALIZATION",
+                    icon: Icons.dashboard,
+                    route: AddSocialization.id,
+                  ),
+                  AdminMenuItem(
+                    title: "UPDATE SOCIALIZATION",
+                    icon: Icons.dashboard,
+                    route: UpdateSocialization.id,
+                  ),
+                ]),
           ]),
           AdminMenuItem(title: "GRAMMAR", icon: Icons.book, children: [
             AdminMenuItem(
