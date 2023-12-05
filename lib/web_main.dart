@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:korean_app_web/packages/gold/movies/add_gold_movies.dart';
+import 'package:korean_app_web/packages/gold/movies/update_gold_movies.dart';
+import 'package:korean_app_web/packages/gold/songs/add_gold_songs.dart';
+import 'package:korean_app_web/packages/gold/songs/update_gold_songs.dart';
 import 'package:korean_app_web/presentation/dashboard/dashboard_screen.dart';
 import 'package:korean_app_web/presentation/dashboard/grammar/add_grammar_page.dart';
 import 'package:korean_app_web/presentation/dashboard/grammar/update_grammar.dart';
@@ -89,6 +93,30 @@ class _WebMainScreenState extends State<WebMainScreen> {
         });
         break;
 
+      case AddGoldMovie.id:
+        setState(() {
+          selectedSCreen = const AddGoldMovie();
+        });
+        break;
+
+      case UpdateGoldMovie.id:
+        setState(() {
+          selectedSCreen = const UpdateGoldMovie();
+        });
+        break;
+
+      case AddGoldSongs.id:
+        setState(() {
+          selectedSCreen = const AddGoldSongs();
+        });
+        break;
+
+      case UpdateGoldSongs.id:
+        setState(() {
+          selectedSCreen = const UpdateGoldSongs();
+        });
+        break;
+
       default:
     }
   }
@@ -166,6 +194,30 @@ class _WebMainScreenState extends State<WebMainScreen> {
                 title: "UPDATE GRAMMAR",
                 icon: Icons.book,
                 route: UpdateGrammar.id),
+          ]),
+          AdminMenuItem(title: "PACKAGES", icon: Icons.book, children: [
+            AdminMenuItem(title: "GOLD", icon: Icons.book, children: [
+              AdminMenuItem(title: "MOVIES", icon: Icons.book, children: [
+                AdminMenuItem(
+                    title: "ADD MOVIES",
+                    icon: Icons.book,
+                    route: AddGoldMovie.id),
+                AdminMenuItem(
+                    title: "UPDATE MOVIES",
+                    icon: Icons.book,
+                    route: UpdateGoldMovie.id),
+              ]),
+              AdminMenuItem(title: "SONGS", icon: Icons.book, children: [
+                AdminMenuItem(
+                    title: "ADD SONGS",
+                    icon: Icons.book,
+                    route: AddGoldSongs.id),
+                AdminMenuItem(
+                    title: "UPDATE SONGS",
+                    icon: Icons.book,
+                    route: UpdateGoldSongs.id),
+              ]),
+            ]),
           ]),
         ],
         selectedRoute: WebMainScreen.id);

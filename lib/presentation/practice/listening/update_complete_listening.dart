@@ -101,8 +101,10 @@ class _UpdateCompleteListeningState extends State<UpdateCompleteListening> {
                                                 // alignment: Alignment.center,
                                                 height: 10.h,
                                                 // width: 10.h,
-                                                child: const Icon(
-                                                    Icons.music_note),
+                                                // child: const Icon(
+                                                //     Icons.music_note
+
+                                                // ),
                                               ),
                                               const Center(
                                                   child: Text(
@@ -138,9 +140,9 @@ class _UpdateCompleteListeningState extends State<UpdateCompleteListening> {
                         return null;
                       },
                     ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(

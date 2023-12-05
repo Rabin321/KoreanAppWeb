@@ -44,8 +44,7 @@ class _AddListeningState extends State<AddListening> {
                 "ADD LISTINING AUDIO",
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 10.h),
                 child: Column(
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.start,
@@ -111,8 +110,9 @@ class _AddListeningState extends State<AddListening> {
                   return null;
                 },
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

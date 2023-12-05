@@ -132,9 +132,9 @@ class _UpdateCompleteReadingState extends State<UpdateCompleteReading> {
                         return null;
                       },
                     ),
-                    const Padding(
+                     Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(

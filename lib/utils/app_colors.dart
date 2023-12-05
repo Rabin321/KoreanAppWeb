@@ -8,7 +8,7 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
   static const black = Colors.black;
 
-  static const primary = Color(0xFF04619F);
+  static var primary = Colors.green[700];
 
   static const lightText = Color(0xff333333);
 

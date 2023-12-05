@@ -108,8 +108,9 @@ class _AddSocializationState extends State<AddSocialization> {
                   return null;
                 },
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
