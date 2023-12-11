@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:korean_app_web/packages/gold/books/add_gold_books.dart';
+import 'package:korean_app_web/packages/gold/books/update_gold_books.dart';
 import 'package:korean_app_web/packages/gold/movies/add_gold_movies.dart';
 import 'package:korean_app_web/packages/gold/movies/update_gold_movies.dart';
 import 'package:korean_app_web/packages/gold/songs/add_gold_songs.dart';
@@ -117,6 +119,18 @@ class _WebMainScreenState extends State<WebMainScreen> {
         });
         break;
 
+      case AddGoldBooks.id:
+        setState(() {
+          selectedSCreen = const AddGoldBooks();
+        });
+        break;
+
+      case UpdateGoldBooks.id:
+        setState(() {
+          selectedSCreen = const UpdateGoldBooks();
+        });
+        break;
+
       default:
     }
   }
@@ -216,6 +230,16 @@ class _WebMainScreenState extends State<WebMainScreen> {
                     title: "UPDATE SONGS",
                     icon: Icons.book,
                     route: UpdateGoldSongs.id),
+              ]),
+              AdminMenuItem(title: "BOOKS", icon: Icons.book, children: [
+                AdminMenuItem(
+                    title: "ADD BOOKS",
+                    icon: Icons.book,
+                    route: AddGoldBooks.id),
+                AdminMenuItem(
+                    title: "UPDATE BOOKS",
+                    icon: Icons.book,
+                    route: UpdateGoldBooks.id),
               ]),
             ]),
           ]),

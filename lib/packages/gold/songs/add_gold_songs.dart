@@ -82,7 +82,7 @@ class _AddGoldSongsState extends State<AddGoldSongs> {
                                             padding:
                                                 const EdgeInsets.only(left: 35),
                                             // alignment: Alignment.center,
-                                            height: 10.h,
+                                              height: 10.h,
                                             // width: 10.h,
                                             child: const Icon(Icons.music_note),
                                           ),
